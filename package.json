@@ -1,0 +1,24 @@
+{
+  "name": "camp-discord-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "esno src/index.ts",
+    "dev": "node scripts/dev.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.8.1",
+    "dotenv": "^16.0.1",
+    "file-mapping": "^0.1.4",
+    "fuse.js": "^6.6.2"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "esno": "^0.16.3",
+    "prettier": "^2.7.1"
+  }
+}
