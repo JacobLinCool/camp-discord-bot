@@ -40,6 +40,7 @@ export const commands = new Fuse(
         /** Utils */
         { cmd: ["任務進度"], res: 任務進度 },
         { cmd: ["全域統計"], res: global_stat },
+        { cmd: ["清除全域統計"], res: reset_global_stat },
     ] as { cmd: string[]; res: Respond }[],
     {
         threshold: 0.0,
@@ -499,4 +500,12 @@ function global_stat(message: Message): void {
         }
     }
     message.reply([`\`\`\`json`, JSON.stringify(copy, null, 4), `\`\`\``].join("\n"));
+}
+
+function reset_global_stat(message: Message): void {
+    for (const id in progress) {
+        delete progress[id];
+    }
+
+    message.reply("已重置全域任務進度");
 }
