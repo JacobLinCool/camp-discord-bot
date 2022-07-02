@@ -2,6 +2,7 @@ import { config } from "dotenv";
 import { Client, Intents } from "discord.js";
 import { commands } from "./commands";
 import { progress } from "./progress";
+import { hello_world } from "./hello-world";
 
 config();
 
@@ -20,6 +21,20 @@ client.once("ready", () => {
 
 client.on("messageCreate", (message) => {
     if (message.author.bot === true || message.content === "" || !client.user) {
+        return;
+    }
+
+    if (message.mentions.users.has(client.user.id)) {
+        const langs = Object.keys(hello_world);
+        const lang = langs[Math.floor(Math.random() * langs.length)];
+        message.reply(
+            [
+                `Hello World, ${message.author.username}!`,
+                `\`\`\`${lang}`,
+                hello_world[lang],
+                `\`\`\``,
+            ].join("\n")
+        );
         return;
     }
 
