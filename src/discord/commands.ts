@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import Fuse from "fuse.js";
-import { progress } from "./progress";
+import { progress } from "../storage";
 
 type Respond = string | ((message: Message) => void);
 
