@@ -9,19 +9,19 @@ export function server() {
     const app = Express();
 
     app.get("/", (req, res) => {
-        res.send("Hello World!");
+        res.send("Alive!");
     });
 
     app.get("/stat", (req, res) => {
-        res.send(JSON.stringify(progress, null, 4));
         res.header("Content-Type", "application/json");
         res.header("Access-Control-Allow-Origin", "*");
+        res.send(JSON.stringify(progress, null, 4));
     });
 
     app.get("/log", (req, res) => {
-        res.send(fs.readFileSync("log.txt", "utf8"));
-        res.header("Content-Type", "text/plain");
+        res.header("Content-Type", "text/html");
         res.header("Access-Control-Allow-Origin", "*");
+        res.send("<pre><code>" + fs.readFileSync("log.txt", "utf8") + "</code></pre>");
     });
 
     app.listen(3000, () => {
