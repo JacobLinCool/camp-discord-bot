@@ -1,54 +1,7 @@
 import { Message } from "discord.js";
-import Fuse from "fuse.js";
-import { progress } from "../storage";
+import { progress } from "../../storage";
 
-type Respond = string | ((message: Message) => void);
-
-export const commands = new Fuse(
-    [
-        /** Preparations */
-        { cmd: ["嗨", "你好", "妳好", "hello"], res: hello },
-        { cmd: ["準備好了", "let's go"], res: prepared },
-        { cmd: ["我們到了"], res: nowhere },
-        /** Challenges */
-        { cmd: ["觀星台", "我們到了觀星台"], res: 觀星台 },
-        { cmd: ["ophiuchus"], res: 觀星台_answer },
-        { cmd: ["一袋米要扛幾樓", "我們到了一袋米要扛幾樓"], res: 一袋米要扛幾樓 },
-        { cmd: ["2739"], res: 一袋米要扛幾樓_answer },
-        { cmd: ["我的老天鵝湖畔", "我們到了我的老天鵝湖畔"], res: 我的老天鵝湖畔 },
-        { cmd: ["4619"], res: 我的老天鵝湖畔_answer },
-        { cmd: ["櫻木花道", "我們到了櫻木花道"], res: 櫻木花道 },
-        { cmd: ["45"], res: 櫻木花道_answer },
-        { cmd: ["薛丁格實驗室", "我們到了薛丁格實驗室"], res: 薛丁格實驗室 },
-        { cmd: ["program"], res: 薛丁格實驗室_answer },
-        {
-            cmd: ["math 實驗室", "math實驗室", "我們到了 math 實驗室", "我們到了math實驗室"],
-            res: Math實驗室,
-        },
-        { cmd: ["use"], res: Math實驗室_answer },
-        { cmd: ["快樂氰化物實驗室", "我們到了快樂氰化物實驗室"], res: 快樂氰化物實驗室 },
-        { cmd: ["linux command", "linuxcommand"], res: 快樂氰化物實驗室_answer },
-        { cmd: ["光視覺實驗室", "我們到了光視覺實驗室"], res: 光視覺實驗室 },
-        { cmd: ["debug"], res: 光視覺實驗室_answer },
-        /** Advanced Challenges */
-        { cmd: ["歐洲公園", "我們到了歐洲公園"], res: 歐洲公園 },
-        { cmd: ["527806"], res: 歐洲公園_answer },
-        { cmd: ["誠樓", "我們到了誠樓"], res: 誠樓 },
-        { cmd: ["ntnucsie"], res: 誠樓_answer },
-        /** Final Challenge */
-        { cmd: ["圖書館", "library", "我們到了圖書館"], res: 圖書館 },
-        /** Utils */
-        { cmd: ["任務進度"], res: 任務進度 },
-        { cmd: ["全域統計"], res: global_stat },
-        { cmd: ["清除全域統計"], res: reset_global_stat },
-    ] as { cmd: string[]; res: Respond }[],
-    {
-        threshold: 0.0,
-        keys: ["cmd"],
-    }
-);
-
-function hello(message: Message): void {
+export function hello(message: Message): void {
     message.reply(
         [
             `${message.author.username} 你好，我是先鋒調查隊隊員**小花**！\n`,
@@ -62,7 +15,7 @@ function hello(message: Message): void {
     );
 }
 
-function prepared(message: Message): void {
+export function prepared(message: Message): void {
     message.reply(
         [
             `開始調查！`,
@@ -76,11 +29,11 @@ function prepared(message: Message): void {
     message.reply({ content: "**附圖 MAP**", files: ["./assets/map.jpg"] });
 }
 
-function nowhere(message: Message): void {
+export function nowhere(message: Message): void {
     message.reply([`抱歉，這邊訊號不太清楚`, `請再說一次你們到了哪裡？`].join("\n"));
 }
 
-function 觀星台(message: Message): void {
+export function 觀星台(message: Message): void {
     message.reply(
         [
             `原來你們到觀星台了！`,
@@ -93,7 +46,7 @@ function 觀星台(message: Message): void {
     message.reply({ content: "**附圖 Astrological**", files: ["./assets/astrological.jpg"] });
 }
 
-function 觀星台_answer(message: Message): void {
+export function 觀星台_answer(message: Message): void {
     if (!progress[message.channelId]["觀星台"]) {
         message.reply("你在哪個地點？");
         return;
@@ -111,7 +64,7 @@ function 觀星台_answer(message: Message): void {
     pretasks_done_1(message);
 }
 
-function 一袋米要扛幾樓(message: Message): void {
+export function 一袋米要扛幾樓(message: Message): void {
     message.reply(
         [
             `這棟大樓的名字還真奇怪...`,
@@ -125,7 +78,7 @@ function 一袋米要扛幾樓(message: Message): void {
     );
 }
 
-function 一袋米要扛幾樓_answer(message: Message): void {
+export function 一袋米要扛幾樓_answer(message: Message): void {
     if (!progress[message.channelId]["一袋米要扛幾樓"]) {
         message.reply("你在哪個地點？");
         return;
@@ -142,7 +95,7 @@ function 一袋米要扛幾樓_answer(message: Message): void {
     pretasks_done_1(message);
 }
 
-function 我的老天鵝湖畔(message: Message): void {
+export function 我的老天鵝湖畔(message: Message): void {
     message.reply({
         content: [
             `我的老天鵝，不得不佩服為這邊起名的人的品味...`,
@@ -156,7 +109,7 @@ function 我的老天鵝湖畔(message: Message): void {
     });
 }
 
-function 我的老天鵝湖畔_answer(message: Message): void {
+export function 我的老天鵝湖畔_answer(message: Message): void {
     if (!progress[message.channelId]["我的老天鵝湖畔"]) {
         message.reply("你在哪個地點？");
         return;
@@ -173,7 +126,7 @@ function 我的老天鵝湖畔_answer(message: Message): void {
     pretasks_done_1(message);
 }
 
-function 櫻木花道(message: Message): void {
+export function 櫻木花道(message: Message): void {
     message.reply({
         content: [
             `蟒蛇手下據點的名字真的都很有創意呢...`,
@@ -186,7 +139,7 @@ function 櫻木花道(message: Message): void {
     message.reply({ content: "**附圖 Umbrella**", files: ["./assets/umbrella.jpg"] });
 }
 
-function 櫻木花道_answer(message: Message): void {
+export function 櫻木花道_answer(message: Message): void {
     if (!progress[message.channelId]["櫻木花道"]) {
         message.reply("你在哪個地點？");
         return;
@@ -203,7 +156,7 @@ function 櫻木花道_answer(message: Message): void {
     pretasks_done_1(message);
 }
 
-function 薛丁格實驗室(message: Message): void {
+export function 薛丁格實驗室(message: Message): void {
     message.reply(
         [
             `走廊上寫著一些不明所以的文字，真令人感到奇怪`,
@@ -214,7 +167,7 @@ function 薛丁格實驗室(message: Message): void {
     );
 }
 
-function 薛丁格實驗室_answer(message: Message): void {
+export function 薛丁格實驗室_answer(message: Message): void {
     if (!progress[message.channelId]["薛丁格實驗室"]) {
         message.reply("你在哪個地點？");
         return;
@@ -231,7 +184,7 @@ function 薛丁格實驗室_answer(message: Message): void {
     pretasks_done_2(message);
 }
 
-function Math實驗室(message: Message): void {
+export function Math實驗室(message: Message): void {
     message.reply(
         [
             `數學阿...真是一聽到就讓人頭疼呢...`,
@@ -244,7 +197,7 @@ function Math實驗室(message: Message): void {
     message.reply({ content: "**附圖 Calculus**", files: ["./assets/calculus.jpg"] });
 }
 
-function Math實驗室_answer(message: Message): void {
+export function Math實驗室_answer(message: Message): void {
     if (!progress[message.channelId]["math 實驗室"]) {
         message.reply("你在哪個地點？");
         return;
@@ -261,7 +214,7 @@ function Math實驗室_answer(message: Message): void {
     pretasks_done_2(message);
 }
 
-function 快樂氰化物實驗室(message: Message): void {
+export function 快樂氰化物實驗室(message: Message): void {
     message.reply(
         [
             `這個實驗室的名字真是讓人不知道該快樂還是恐懼呢...`,
@@ -275,7 +228,7 @@ function 快樂氰化物實驗室(message: Message): void {
     );
 }
 
-function 快樂氰化物實驗室_answer(message: Message): void {
+export function 快樂氰化物實驗室_answer(message: Message): void {
     if (!progress[message.channelId]["快樂氰化物實驗室"]) {
         message.reply("你在哪個地點？");
         return;
@@ -292,7 +245,7 @@ function 快樂氰化物實驗室_answer(message: Message): void {
     pretasks_done_2(message);
 }
 
-function 光視覺實驗室(message: Message): void {
+export function 光視覺實驗室(message: Message): void {
     message.reply(
         [
             `這邊顏色好多真是令人眼花撩亂@@`,
@@ -313,7 +266,7 @@ function 光視覺實驗室(message: Message): void {
     );
 }
 
-function 光視覺實驗室_answer(message: Message): void {
+export function 光視覺實驗室_answer(message: Message): void {
     if (!progress[message.channelId]["光視覺實驗室"]) {
         message.reply("你在哪個地點？");
         return;
@@ -330,7 +283,7 @@ function 光視覺實驗室_answer(message: Message): void {
     pretasks_done_2(message);
 }
 
-function 歐洲公園(message: Message): void {
+export function 歐洲公園(message: Message): void {
     if (!check_pretasks(message.channelId).slice(0, 4).every(Boolean)) {
         message.reply("WTF, how did you get here?");
         return;
@@ -357,7 +310,7 @@ function 歐洲公園(message: Message): void {
     });
 }
 
-function 歐洲公園_answer(message: Message): void {
+export function 歐洲公園_answer(message: Message): void {
     if (!progress[message.channelId]["歐洲公園"]) {
         message.reply("你在哪個地點？");
         return;
@@ -373,7 +326,7 @@ function 歐洲公園_answer(message: Message): void {
     });
 }
 
-function 誠樓(message: Message): void {
+export function 誠樓(message: Message): void {
     if (!check_pretasks(message.channelId).slice(4, 8).every(Boolean)) {
         message.reply("WTF, how did you get here?");
         return;
@@ -391,7 +344,7 @@ function 誠樓(message: Message): void {
     });
 }
 
-function 誠樓_answer(message: Message): void {
+export function 誠樓_answer(message: Message): void {
     if (!progress[message.channelId]["誠樓"]) {
         message.reply("你在哪個地點？");
         return;
@@ -407,7 +360,7 @@ function 誠樓_answer(message: Message): void {
     });
 }
 
-function 圖書館(message: Message): void {
+export function 圖書館(message: Message): void {
     if (!progress[message.channelId]["527806"] || !progress[message.channelId]["ntnucsie"]) {
         message.reply("WTF, how did you get here?");
         return;
@@ -422,7 +375,7 @@ function 圖書館(message: Message): void {
     });
 }
 
-function 任務進度(message: Message): void {
+export function 任務進度(message: Message): void {
     const files: string[] = [];
 
     const done = check_pretasks(message.channelId);
@@ -450,7 +403,7 @@ function 任務進度(message: Message): void {
     });
 }
 
-function check_pretasks(
+export function check_pretasks(
     channel: string
 ): [boolean, boolean, boolean, boolean, boolean, boolean, boolean, boolean] {
     return [
@@ -465,7 +418,7 @@ function check_pretasks(
     ];
 }
 
-async function pretasks_done_1(message: Message): Promise<void> {
+export async function pretasks_done_1(message: Message): Promise<void> {
     if (check_pretasks(message.channelId).slice(0, 4).every(Boolean)) {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         message.channel.send(
@@ -478,7 +431,7 @@ async function pretasks_done_1(message: Message): Promise<void> {
     }
 }
 
-async function pretasks_done_2(message: Message): Promise<void> {
+export async function pretasks_done_2(message: Message): Promise<void> {
     if (check_pretasks(message.channelId).slice(4, 8).every(Boolean)) {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         message.channel.send(
@@ -491,7 +444,7 @@ async function pretasks_done_2(message: Message): Promise<void> {
     }
 }
 
-function global_stat(message: Message): void {
+export function global_stat(message: Message): void {
     const copy = {};
     for (const id in progress) {
         const channel = message.guild?.channels.cache.get(id);
@@ -502,7 +455,7 @@ function global_stat(message: Message): void {
     message.reply([`\`\`\`json`, JSON.stringify(copy, null, 4), `\`\`\``].join("\n"));
 }
 
-function reset_global_stat(message: Message): void {
+export function reset_global_stat(message: Message): void {
     for (const id in progress) {
         delete progress[id];
     }
