@@ -22,6 +22,18 @@ export function discord() {
 
     client.once("ready", () => {
         logger.info("Ready!");
+        // client.user?.setUsername("內勤人員 小花 🌸");
+        // client.user?.setAvatar(fs.readFileSync("assets/avatar.png"));
+        client.user?.setPresence({
+            status: "dnd",
+            activities: [
+                {
+                    name: "Neokent 的線上課程",
+                    type: "STREAMING",
+                    url: "https://www.youtube.com/watch?v=vDccGELcqEc&t=7091",
+                },
+            ],
+        });
     });
 
     client.on("messageCreate", (message) => {
