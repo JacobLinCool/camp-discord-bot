@@ -1,16 +1,16 @@
 import fetch from "node-fetch";
 import he from "he";
 import WebSocket from "ws";
-import { CommandInteraction, Interaction, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
+import scoreboard from "./scoreboard";
+import add_score from "./add-score";
 
 let ws: WebSocket | null = null;
 const bang_chats: string[] = [];
 const game_gaming_status: any = {};
 const subscribers = new Map<string, { interaction: CommandInteraction; expires: number }>();
 
-export async function commands(interaction: Interaction) {
-    if (!interaction.isCommand()) return;
-
+export async function commands(interaction: CommandInteraction) {
     try {
         const { commandName: command } = interaction;
 
@@ -29,19 +29,23 @@ export async function commands(interaction: Interaction) {
                 )}&filter=default`
             ).then((res) => res.json());
 
-            const embeds = results.items
-                .map((item) =>
-                    new MessageEmbed()
-                        .setColor("#0099ff")
-                        .setTitle(he.unescape(item.title))
-                        .setURL(item.link)
-                        .setDescription(
-                            "與 " + item.tags.map((tag) => `**${tag}**`).join(", ") + " 相關"
-                        )
-                )
-                .slice(0, 4);
+            if (results.items.length) {
+                const embeds = results.items
+                    .map((item) =>
+                        new MessageEmbed()
+                            .setColor("#0099ff")
+                            .setTitle(he.unescape(item.title))
+                            .setURL(item.link)
+                            .setDescription(
+                                "與 " + item.tags.map((tag) => `**${tag}**`).join(", ") + " 相關"
+                            )
+                    )
+                    .slice(0, 4);
 
-            await interaction.editReply({ embeds: embeds });
+                await interaction.editReply({ embeds: embeds });
+            } else {
+                await interaction.editReply("沒有解法 QQ");
+            }
         } else if (command === "bang") {
             await interaction.deferReply();
 
@@ -67,6 +71,10 @@ export async function commands(interaction: Interaction) {
             subscribers.delete(interaction.channelId);
 
             interaction.editReply("我的轉播到此結束！");
+        } else if (command === "scoreboard") {
+            scoreboard(interaction);
+        } else if (command === "add-score") {
+            add_score(interaction);
         }
     } catch (e) {
         console.error(e);

@@ -47,9 +47,12 @@ export function discord() {
             return;
         }
 
-        const msg = message.content.replace(/<@\d+>/g, "").replace(/!,.~！。，～/g, "");
+        const msg = message.content
+            .replace(/<@\d+>/g, "")
+            .replace(/!,.~！。，～/g, "")
+            .trim();
 
-        if (message.mentions.users.has(client.user.id)) {
+        if (message.mentions.users.has(client.user.id) && msg === "") {
             const langs = Object.keys(hello_world);
             const lang = langs[Math.floor(Math.random() * langs.length)];
             message.reply(
@@ -91,6 +94,21 @@ export function discord() {
     });
 
     client.on("interactionCreate", async (interaction) => {
+        if (
+            !interaction.isCommand() ||
+            !interaction.channel ||
+            !interaction.member ||
+            Array.isArray(interaction.member.roles)
+        ) {
+            return;
+        }
+        logger.info({
+            channel: interaction.guild?.channels.cache.get(interaction.channel.id)?.name,
+            sender: `${interaction.user.username} (${interaction.member.roles.cache
+                .map((r) => r.name)
+                .join(", ")})`,
+            command: interaction.commandName,
+        });
         commands(interaction);
     });
 
