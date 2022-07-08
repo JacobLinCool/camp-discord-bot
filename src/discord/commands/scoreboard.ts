@@ -15,22 +15,11 @@ const channels = {
 const manager_channels = ["990592597946937385", "992513184445497404"];
 
 export default async function (interaction: CommandInteraction) {
-    if (manager_channels.includes(interaction.channelId)) {
-        await interaction.deferReply();
-        let text = "";
-        for (const team in scoreboard) {
-            text += `**${team}** (${Object.values(scoreboard[team]).reduce(
-                (acc, curr) => acc + curr,
-                0
-            )})\n\`\`\`\n`;
-            for (const type in scoreboard[team]) {
-                text += `${type}: ${scoreboard[team][type]}\n`;
-            }
-            text += "```\n";
-        }
-        await interaction.editReply(text);
-        return;
+    if (!interaction.member?.roles || Array.isArray(interaction.member?.roles)) {
+        return interaction.reply("無法確認權限");
     }
+
+    const roles = new Set(interaction.member?.roles.cache.map((role) => role.name));
 
     if (channels[interaction.channelId]) {
         await interaction.deferReply();
@@ -50,5 +39,22 @@ export default async function (interaction: CommandInteraction) {
         return;
     }
 
-    await interaction.reply({ content: "不得在此使用此指令！", ephemeral: true });
+    if (roles.has("admin") || roles.has("先鋒部隊") || roles.has("鑑識調查科科員")) {
+        await interaction.deferReply();
+        let text = "";
+        for (const team in scoreboard) {
+            text += `**${team}** (${Object.values(scoreboard[team]).reduce(
+                (acc, curr) => acc + curr,
+                0
+            )})\n\`\`\`\n`;
+            for (const type in scoreboard[team]) {
+                text += `${type}: ${scoreboard[team][type]}\n`;
+            }
+            text += "```\n";
+        }
+        await interaction.editReply(text);
+        return;
+    }
+
+    await interaction.reply({ content: "權限無效！", ephemeral: true });
 }
